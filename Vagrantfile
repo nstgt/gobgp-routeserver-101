@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
   # rs gobgp
   config.vm.define :rs do |rs|
     rs.vm.box = "bento/debian-9.6"
-    rs.vm.network "private_network", ip: "10.173.176.211", virtualbox__intnet: "#{UUID}-101_ixp_subnet"
+    rs.vm.network "private_network", ip: "10.173.176.211", virtualbox__intnet: "#{UUID}_ixp_subnet"
     rs.vm.provider "virtualbox" do |v|
       v.cpus = 2
       v.memory = 512
