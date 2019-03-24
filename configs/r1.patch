@@ -1,6 +1,6 @@
 [edit system]
 -  host-name vqfx-re;
-+  host-name r2;
++  host-name r1;
 [edit interfaces]
 -   et-0/0/0 {
 -       unit 0 {
@@ -3677,17 +3677,17 @@
 +   em3 {
 +       unit 0 {
 +           family inet {
-+               address 10.173.176.102/24;
++               address 10.173.176.101/24;
 +           }
 +           family inet6 {
-+               address 2001:db8:7:1::102/64;
++               address 2001:db8:7:1::101/64;
 +           }
 +       }
 +   }
 +   lo0 {
 +       unit 0 {
 +           family inet {
-+               address 10.2.0.102/32;
++               address 10.1.0.101/32;
 +           }
 +       }
 +   }
@@ -3704,18 +3704,17 @@
 +              route 172.16.0.0/12 discard;
 +              route 192.168.0.0/16 discard;
 +              /* my-prefixes */
-+              route 10.2.0.0/16 discard;
-+              route 10.22.0.0/16 discard;
++              route 10.1.0.0/16 discard;
 +          }
 +      }
-+      router-id 10.2.0.102;
-+      autonomous-system 65002;
++      router-id 10.1.0.101;
++      autonomous-system 65001;
 +  }
 [edit protocols]
 +   bgp {
 +       group ebgp-to-rs {
 +           neighbor 10.173.176.211 {
-+               authentication-key "$9$1BqISevMX-b28XHqmfzFEcSyvWX7-"; ## SECRET-DATA
++               authentication-key "$9$V2bgJGUHm5FjHO1Rhrls2g4GDik."; ## SECRET-DATA
 +               export advertise-my-prefixes;
 +               peer-as 64686;
 +           }
@@ -3727,10 +3726,7 @@
 [edit]
 +  policy-options {
 +      prefix-list my-prefixes {
-+          10.2.0.0/16;
-+      }
-+      prefix-list my-prefixes-except-for-as65001 {
-+          10.22.0.0/16;
++          10.1.0.0/16;
 +      }
 +      policy-statement advertise-my-prefixes {
 +          term 1 {
@@ -3741,20 +3737,9 @@
 +              then accept;
 +          }
 +          term 2 {
-+              from {
-+                  protocol static;
-+                  prefix-list-filter my-prefixes-except-for-as65001 exact;
-+              }
-+              then {
-+                  community + not-advertise-to-as65001;
-+                  accept;
-+              }
-+          }
-+          term 3 {
 +              then reject;
 +          }
 +      }
-+      community not-advertise-to-as65001 members [ large:64686:0:65001 0:64686 ];
 +  }
 -  vlans {
 -      default {
