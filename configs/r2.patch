@@ -3754,7 +3754,7 @@
 +              then reject;
 +          }
 +      }
-+      community not-advertise-to-as65001 members [ large:64686:0:65001 0:64686 ];
++      community not-advertise-to-as65001 members large:64686:0:65001;
 +  }
 -  vlans {
 -      default {
