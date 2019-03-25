@@ -1,13 +1,12 @@
 ### global setting: from
-global:
-  config:
-    as: 64686
-    router-id: 10.173.176.211
+
 ### global setting: to
 
-### mrt setting: from
-
-### mrt setting: to
+mrt-dump:
+  - config:
+      dump-type: updates
+      file-name: /tmp/updates.2006-01-02_1504.mrt
+      rotation-interval: 180
 
 ### rpki setting: from
 
@@ -91,7 +90,7 @@ policy-definitions:
             options: remove
             set-large-community-method:
               communities-list:
-                - SCRUB-IMPORT
+                - ^64686:1101:*$
     - conditions:
         bgp-conditions:
           as-path-length:
@@ -188,11 +187,11 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -203,11 +202,11 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -226,11 +225,11 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
   - name: AS65003-IMPORT
     statements:
@@ -240,7 +239,7 @@ policy-definitions:
             options: remove
             set-large-community-method:
               communities-list:
-                - SCRUB-IMPORT
+                - ^64686:1101:*$
     - conditions:
         bgp-conditions:
           as-path-length:
@@ -337,11 +336,11 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -352,11 +351,11 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -375,19 +374,17 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list: ^64686:[0-9]+:[0-9]+$
         route-disposition: accept-route
 
 defined-sets:
   prefix-sets:
 ### prefix list for AS65001 setting: from
-    - prefix-set-name: AS65001-PREFIX
-      prefix-list:
-        - ip-prefix: 10.1.0.0/16
+
 ### prefix list for AS65001 setting: to
     - prefix-set-name: AS65002-PREFIX
       prefix-list:
@@ -460,9 +457,6 @@ defined-sets:
       - community-set-name: EXPORT-TO-AS65003
         community-list:
           - 64686:65003
-      - community-set-name: SCRUB-EXPORT
-        community-list:
-          - ^(0|64686):[0-9]+$
       - community-set-name: NOT-EXPORT-TO-ALL
         community-list:
           - 0:64686
@@ -482,12 +476,6 @@ defined-sets:
       - large-community-set-name: EXPORT-TO-AS65003
         large-community-list:
           - 64686:1:65003
-      - large-community-set-name: SCRUB-IMPORT
-        large-community-list:
-          - ^64686:1101:*$
-      - large-community-set-name: SCRUB-EXPORT
-        large-community-list:
-          - ^64686:[0-9]+:[0-9]+$
       - large-community-set-name: NOT-EXPORT-TO-ALL
         large-community-list:
           - 64686:0:0
