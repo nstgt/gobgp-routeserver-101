@@ -5,18 +5,16 @@ global:
     router-id: 10.173.176.211
 ### global setting: to
 
-### mrt setting: from
 mrt-dump:
   - config:
       dump-type: updates
       file-name: /tmp/updates.2006-01-02_1504.mrt
       rotation-interval: 180
-### mrt setting: to
 
 ### rpki setting: from
 rpki-servers:
   - config:
-      address: 210.173.170.254
+      address: 192.41.192.218
       port: 323
 ### rpki setting: to
 
@@ -121,12 +119,12 @@ policy-definitions:
             options: remove
             set-large-community-method:
               communities-list:
-                - SCRUB-IMPORT
+                - ^64686:1[0-9]{3}:[0-9]*$
     - conditions:
         bgp-conditions:
           as-path-length:
             operator: ge
-            value: 32
+            value: 5
       actions:
         bgp-actions:
           set-large-community:
@@ -184,6 +182,13 @@ policy-definitions:
               communities-list:
                 - 64686:1101:9
         route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
     - conditions:
         bgp-conditions:
           rpki-validation-result: invalid
@@ -220,11 +225,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -232,14 +240,12 @@ policy-definitions:
             large-community-set: EXPORT-TO-AS65001
       actions:
         bgp-actions:
-          set-community:
-            options: remove
-            set-community-method:
-              communities-list: SCRUB-EXPORT
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -258,12 +264,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
-        route-disposition: accept-route
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
 ### export policy for AS65001 setting: to
   - name: AS65002-IMPORT
     statements:
@@ -273,12 +281,12 @@ policy-definitions:
             options: remove
             set-large-community-method:
               communities-list:
-                - SCRUB-IMPORT
+                - ^64686:1[0-9]{3}:[0-9]*$
     - conditions:
         bgp-conditions:
           as-path-length:
             operator: ge
-            value: 32
+            value: 5
       actions:
         bgp-actions:
           set-large-community:
@@ -336,6 +344,13 @@ policy-definitions:
               communities-list:
                 - 64686:1101:9
         route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
     - conditions:
         bgp-conditions:
           rpki-validation-result: invalid
@@ -370,11 +385,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -382,14 +400,12 @@ policy-definitions:
             large-community-set: EXPORT-TO-AS65002
       actions:
         bgp-actions:
-          set-community:
-            options: remove
-            set-community-method:
-              communities-list: SCRUB-EXPORT
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -408,12 +424,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
-        route-disposition: accept-route
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
   - name: AS65003-IMPORT
     statements:
     - actions:
@@ -422,12 +440,12 @@ policy-definitions:
             options: remove
             set-large-community-method:
               communities-list:
-                - SCRUB-IMPORT
+                - ^64686:1[0-9]{3}:[0-9]*$
     - conditions:
         bgp-conditions:
           as-path-length:
             operator: ge
-            value: 32
+            value: 5
       actions:
         bgp-actions:
           set-large-community:
@@ -485,6 +503,13 @@ policy-definitions:
               communities-list:
                 - 64686:1101:9
         route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
     - conditions:
         bgp-conditions:
           rpki-validation-result: invalid
@@ -519,11 +544,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -531,14 +559,12 @@ policy-definitions:
             large-community-set: EXPORT-TO-AS65003
       actions:
         bgp-actions:
-          set-community:
-            options: remove
-            set-community-method:
-              communities-list: SCRUB-EXPORT
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
         route-disposition: accept-route
     - conditions:
         bgp-conditions:
@@ -557,12 +583,14 @@ policy-definitions:
           set-community:
             options: remove
             set-community-method:
-              communities-list: SCRUB-EXPORT
+              communities-list:
+                - ^(0|64686):[0-9]+$
           set-large-community:
             options: remove
             set-large-community-method:
-              communities-list: SCRUB-EXPORT
-        route-disposition: accept-route
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
 
 defined-sets:
   prefix-sets:
@@ -574,10 +602,13 @@ defined-sets:
     - prefix-set-name: AS65002-PREFIX
       prefix-list:
         - ip-prefix: 10.2.0.0/16
-        - ip-prefix: 10.22.0.0/16
+        - ip-prefix: 10.2.1.0/24
+        - ip-prefix: 10.2.2.0/24
+        - ip-prefix: 10.23.0.0/16
     - prefix-set-name: AS65003-PREFIX
       prefix-list:
         - ip-prefix: 10.3.0.0/16
+        - ip-prefix: 10.23.0.0/16
     - prefix-set-name: BOGON
       prefix-list:
         - ip-prefix: 0.0.0.0/8
@@ -652,9 +683,6 @@ defined-sets:
       - community-set-name: EXPORT-TO-AS65003
         community-list:
           - 64686:65003
-      - community-set-name: SCRUB-EXPORT
-        community-list:
-          - ^(0|64686):[0-9]+$
       - community-set-name: NOT-EXPORT-TO-ALL
         community-list:
           - 0:64686
@@ -679,12 +707,6 @@ defined-sets:
       - large-community-set-name: EXPORT-TO-AS65003
         large-community-list:
           - 64686:1:65003
-      - large-community-set-name: SCRUB-IMPORT
-        large-community-list:
-          - ^64686:1101:*$
-      - large-community-set-name: SCRUB-EXPORT
-        large-community-list:
-          - ^64686:[0-9]+:[0-9]+$
       - large-community-set-name: NOT-EXPORT-TO-ALL
         large-community-list:
           - 64686:0:0
