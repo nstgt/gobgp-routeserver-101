@@ -3705,7 +3705,7 @@
 +              route 192.168.0.0/16 discard;
 +              /* my-prefixes */
 +              route 10.2.0.0/16 discard;
-+              route 10.22.0.0/16 discard;
++              route 10.23.0.0/16 discard;
 +          }
 +      }
 +      router-id 10.2.0.102;
@@ -3730,7 +3730,7 @@
 +          10.2.0.0/16;
 +      }
 +      prefix-list my-prefixes-except-for-as65001 {
-+          10.22.0.0/16;
++          10.23.0.0/16;
 +      }
 +      policy-statement advertise-my-prefixes {
 +          term 1 {
@@ -3750,11 +3750,11 @@
 +                  accept;
 +              }
 +          }
-+          term 3 {
++          term 99 {
 +              then reject;
 +          }
 +      }
-+      community not-advertise-to-as65001 members [ large:64686:0:65001 0:64686 ];
++      community not-advertise-to-as65001 members large:64686:0:65001;
 +  }
 -  vlans {
 -      default {
