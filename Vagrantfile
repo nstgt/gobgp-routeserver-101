@@ -14,6 +14,7 @@ Vagrant.configure(2) do |config|
       grep 127.0.1.2 /etc/hosts || echo 127.0.1.2 rs >> /etc/hosts
       hostnamectl set-hostname rs
       systemctl restart rsyslog
+      apt-get update && apt-get install -y vim git
     EOS
     rs.vm.provision "shell", privileged: true, path: "prov/install_gobgp.sh"
   end

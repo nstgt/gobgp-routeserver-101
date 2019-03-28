@@ -8,7 +8,7 @@ PermissionsStartOnly=yes
 User=gobgpd
 SyslogIdentifier=gobgpd
 ExecStartPre=/sbin/setcap 'cap_net_bind_service=+ep' /usr/local/sbin/gobgpd
-ExecStart=/usr/local/sbin/gobgpd -f /etc/gobgp/gobgpd.conf -t yaml --cpus=2
+ExecStart=/usr/local/sbin/gobgpd -f /etc/gobgp/gobgpd.yaml -t yaml --cpus=2
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 
