@@ -1,8 +1,5 @@
 ### global setting: from
-global:
-  config:
-    as: 64686
-    router-id: 10.173.176.211
+
 ### global setting: to
 
 mrt-dump:
@@ -12,43 +9,12 @@ mrt-dump:
       rotation-interval: 180
 
 ### rpki setting: from
-rpki-servers:
-  - config:
-      address: 192.41.192.218
-      port: 323
+
 ### rpki setting: to
 
 neighbors:
 ### neighbor 10.173.176.101 setting: from
-  - config:
-      neighbor-address: 10.173.176.101
-      peer-as: 65001
-      auth-password: pass65001
-      admin-down: false
-    timers:
-      config:
-        hold-time: 90
-        keepalive-interval: 30
-    transport:
-      config:
-        passive-mode: true
-    route-server:
-      config:
-        route-server-client: true
-    afi-safis:
-      - config:
-          afi-safi-name: ipv4-unicast
-        prefix-limit:
-          config:
-            max-prefixes: 2000
-    apply-policy:
-      config:
-        default-import-policy: accept-route
-        import-policy-list:
-          - AS65001-IMPORT
-        default-export-policy: accept-route
-        export-policy-list:
-          - AS65001-EXPORT
+
 ### neighbor 10.173.176.101 setting: to
   - config:
       neighbor-address: 10.173.176.102
@@ -111,167 +77,10 @@ neighbors:
 
 policy-definitions:
 ### import policy for AS65001 setting: from
-  - name: AS65001-IMPORT
-    statements:
-    - actions:
-        bgp-actions:
-          set-large-community:
-            options: remove
-            set-large-community-method:
-              communities-list:
-                - ^64686:1[0-9]{3}:[0-9]*$
-    - conditions:
-        bgp-conditions:
-          as-path-length:
-            operator: ge
-            value: 5
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:5
-        route-disposition: reject-route
-    - conditions:
-        bgp-conditions:
-          match-as-path-set:
-            as-path-set: AS65001-PEER
-            match-set-options: invert
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:7
-        route-disposition: reject-route
-    - conditions:
-        match-prefix-set:
-          prefix-set: BOGON
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:3
-        route-disposition: reject-route
-    - conditions:
-        bgp-conditions:
-          match-as-path-set:
-            as-path-set: AS65001-ORIGIN
-            match-set-options: invert
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:10
-        route-disposition: reject-route
-    - conditions:
-        match-prefix-set:
-          prefix-set: AS65001-PREFIX
-          match-set-options: invert
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:9
-        route-disposition: reject-route
-    - actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1001:1
-    - conditions:
-        bgp-conditions:
-          rpki-validation-result: invalid
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: add
-            set-large-community-method:
-              communities-list:
-                - 64686:1101:13
-        route-disposition: reject-route
+
 ### import policy for AS65001 setting: to
 ### export policy for AS65001 setting: from
-  - name: AS65001-EXPORT
-    statements:
-    - conditions:
-        bgp-conditions:
-          match-community-set:
-            community-set: NOT-EXPORT-TO-AS65001
-      actions:
-        route-disposition: reject-route
-    - conditions:
-        bgp-conditions:
-          match-large-community-set:
-            large-community-set: NOT-EXPORT-TO-AS65001
-      actions:
-        route-disposition: reject-route
-    - conditions:
-        bgp-conditions:
-          match-community-set:
-            community-set: EXPORT-TO-AS65001
-      actions:
-        bgp-actions:
-          set-community:
-            options: remove
-            set-community-method:
-              communities-list:
-                - ^(0|64686):[0-9]+$
-          set-large-community:
-            options: remove
-            set-large-community-method:
-              communities-list:
-                - ^64686:[0-9]{1}:[0-9]*$
-                - ^64686:[0-9]{3}:[0-9]*$
-        route-disposition: accept-route
-    - conditions:
-        bgp-conditions:
-          match-large-community-set:
-            large-community-set: EXPORT-TO-AS65001
-      actions:
-        bgp-actions:
-          set-large-community:
-            options: remove
-            set-large-community-method:
-              communities-list:
-                - ^64686:[0-9]{1}:[0-9]*$
-                - ^64686:[0-9]{3}:[0-9]*$
-        route-disposition: accept-route
-    - conditions:
-        bgp-conditions:
-          match-community-set:
-            community-set: NOT-EXPORT-TO-ALL
-      actions:
-        route-disposition: reject-route
-    - conditions:
-        bgp-conditions:
-          match-large-community-set:
-            large-community-set: NOT-EXPORT-TO-ALL
-      actions:
-        route-disposition: reject-route
-    - actions:
-        bgp-actions:
-          set-community:
-            options: remove
-            set-community-method:
-              communities-list:
-                - ^(0|64686):[0-9]+$
-          set-large-community:
-            options: remove
-            set-large-community-method:
-              communities-list:
-                - ^64686:[0-9]{1}:[0-9]*$
-                - ^64686:[0-9]{3}:[0-9]*$
+
 ### export policy for AS65001 setting: to
   - name: AS65002-IMPORT
     statements:
@@ -595,9 +404,7 @@ policy-definitions:
 defined-sets:
   prefix-sets:
 ### prefix list for AS65001 setting: from
-    - prefix-set-name: AS65001-PREFIX
-      prefix-list:
-        - ip-prefix: 10.1.0.0/16
+
 ### prefix list for AS65001 setting: to
     - prefix-set-name: AS65002-PREFIX
       prefix-list:
@@ -643,12 +450,7 @@ defined-sets:
   bgp-defined-sets:
     as-path-sets:
 ### as path list for AS65001 setting: from
-      - as-path-set-name: AS65001-PEER
-        as-path-list:
-          - ^65001_
-      - as-path-set-name: AS65001-ORIGIN
-        as-path-list:
-          - _65001$
+
 ### as path list for AS65001 setting: to
       - as-path-set-name: AS65002-PEER
         as-path-list:
@@ -664,12 +466,7 @@ defined-sets:
           - _65003$
     community-sets:
 ### community list for AS65001 setting: from
-      - community-set-name: NOT-EXPORT-TO-AS65001
-        community-list:
-          - 0:65001
-      - community-set-name: EXPORT-TO-AS65001
-        community-list:
-          - 64686:65001
+
 ### community list for AS65001 setting: to
       - community-set-name: NOT-EXPORT-TO-AS65002
         community-list:
@@ -688,12 +485,7 @@ defined-sets:
           - 0:64686
     large-community-sets:
 ### large community list for AS65001 setting: from
-      - large-community-set-name: NOT-EXPORT-TO-AS65001
-        large-community-list:
-          - 64686:0:65001
-      - large-community-set-name: EXPORT-TO-AS65001
-        large-community-list:
-          - 64686:1:65001
+
 ### large community list for AS65001 setting: to
       - large-community-set-name: NOT-EXPORT-TO-AS65002
         large-community-list:
