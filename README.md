@@ -42,7 +42,7 @@ Tested on my MacBook Pro running  macOS Mojave 10.14.3, but should work on both 
 
 ## What should do next?
 
-You will configure GoBGP installed on **rs** so login to rs by `vagrant ssh g2` and be root `sudo su -` then create first configuration at `/etc/gobgp/gobgpd.yaml` as described in slides, then boot it `systemctl start gobgpd`
+You will configure GoBGP installed on **rs** so login to rs by `vagrant ssh rs` and be root `sudo su -` then create first configuration at `/etc/gobgp/gobgpd.yaml` as described in slides, then boot it `systemctl start gobgpd`
 
 After that you can modify it following the step by step instruction in the slide, or try out whatever you want to.
 

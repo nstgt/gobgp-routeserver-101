@@ -14,7 +14,7 @@ mrt-dump:
 ### rpki setting: from
 rpki-servers:
   - config:
-      address: 192.41.192.218
+      address: 210.173.170.254
       port: 323
 ### rpki setting: to
 
