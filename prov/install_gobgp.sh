@@ -1,5 +1,5 @@
 # go version to install
-export GO_VERSION=1.11.6
+export GO_VERSION=1.12.1
 
 # set envvars for go
 cat << EOF > /etc/profile.d/golang.sh
