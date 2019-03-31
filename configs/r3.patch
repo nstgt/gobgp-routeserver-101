@@ -3708,6 +3708,13 @@
 +              route 10.23.0.0/16 discard;
 +          }
 +      }
++      rib inet6.0 {
++          static {
++              /* my-prefixes */
++              route 2001:db8:3::/64 discard;
++              route 2001:db8:23::/64 discard;
++          }
++      }
 +      router-id 10.3.0.103;
 +      autonomous-system 65003;
 +  }
@@ -3717,6 +3724,11 @@
 +           neighbor 10.173.176.211 {
 +               authentication-key "$9$.mQn/9pBRSApxNdb2gfTQz/CuO1"; ## SECRET-DATA
 +               export advertise-my-prefixes;
++               peer-as 64686;
++           }
++           neighbor 2001:db8:7:1::211 {
++               authentication-key "$9$35cYnA0B1hrK8RhYgoJDj/CAtBIcyl"; ## SECRET-DATA
++               export advertise-my-prefixes-v6;
 +               peer-as 64686;
 +           }
 +       }
@@ -3729,6 +3741,9 @@
 +      prefix-list my-prefixes {
 +          10.3.0.0/16;
 +      }
++      prefix-list my-prefixes-v6 {
++          2001:db8:3::/64;
++      }
 +      policy-statement advertise-my-prefixes {
 +          term 1 {
 +              from {
@@ -3737,7 +3752,19 @@
 +              }
 +              then accept;
 +          }
-+          term 2 {
++          term 99 {
++              then reject;
++          }
++      }
++      policy-statement advertise-my-prefixes-v6 {
++          term 1 {
++              from {
++                  protocol static;
++                  prefix-list-filter my-prefixes-v6 exact;
++              }
++              then accept;
++          }
++          term 99 {
 +              then reject;
 +          }
 +      }

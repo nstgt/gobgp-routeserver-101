@@ -1,0 +1,1319 @@
+### global setting: from
+global:
+  config:
+    as: 64686
+    router-id: 10.173.176.211
+### global setting: to
+
+mrt-dump:
+  - config:
+      dump-type: updates
+      file-name: /tmp/updates.2006-01-02_1504.mrt
+      rotation-interval: 180
+
+### rpki setting: from
+rpki-servers:
+  - config:
+      address: 210.173.170.254
+      port: 323
+### rpki setting: to
+
+neighbors:
+### neighbor 10.173.176.101 setting: from
+  - config:
+      neighbor-address: 10.173.176.101
+      peer-as: 65001
+      auth-password: pass65001
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv4-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65001-IMPORT
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65001-EXPORT
+### neighbor 10.173.176.101 setting: to
+  - config:
+      neighbor-address: 10.173.176.102
+      peer-as: 65002
+      auth-password: pass65002
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv4-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65002-IMPORT
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65002-EXPORT
+  - config:
+      neighbor-address: 10.173.176.103
+      peer-as: 65003
+      auth-password: pass65003
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv4-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65003-IMPORT
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65003-EXPORT
+  - config:
+      neighbor-address: 2001:db8:7:1::101
+      peer-as: 65001
+      auth-password: pass65001
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv6-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65001-IMPORT-V6
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65001-EXPORT-V6
+  - config:
+      neighbor-address: 2001:db8:7:1::102
+      peer-as: 65002
+      auth-password: pass65002
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv6-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65002-IMPORT-V6
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65002-EXPORT-V6
+  - config:
+      neighbor-address: 2001:db8:7:1::103
+      peer-as: 65003
+      auth-password: pass65003
+      admin-down: false
+    timers:
+      config:
+        hold-time: 90
+        keepalive-interval: 30
+    transport:
+      config:
+        passive-mode: true
+    route-server:
+      config:
+        route-server-client: true
+    afi-safis:
+      - config:
+          afi-safi-name: ipv6-unicast
+        prefix-limit:
+          config:
+            max-prefixes: 2000
+    apply-policy:
+      config:
+        default-import-policy: accept-route
+        import-policy-list:
+          - AS65003-IMPORT-V6
+        default-export-policy: accept-route
+        export-policy-list:
+          - AS65003-EXPORT-V6
+
+policy-definitions:
+### import policy for AS65001 setting: from
+  - name: AS65001-IMPORT
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65001-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65001-ORIGIN
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65001-PREFIX
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+### import policy for AS65001 setting: to
+### export policy for AS65001 setting: from
+  - name: AS65001-EXPORT
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65001
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65001
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65001
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65001
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+### export policy for AS65001 setting: to
+  - name: AS65002-IMPORT
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65002-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65002-ORIGIN
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65002-PREFIX
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+  - name: AS65002-EXPORT
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65002
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65002
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65002
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65002
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+  - name: AS65003-IMPORT
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65003-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65003-ORIGIN
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65003-PREFIX
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+  - name: AS65003-EXPORT
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65003
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65003
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65003
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65003
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+  - name: AS65001-IMPORT-V6
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65001-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON-V6
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65001-ORIGIN-V6
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65001-PREFIX-V6
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+  - name: AS65001-EXPORT-V6
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65001
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65001
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65001
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65001
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+  - name: AS65002-IMPORT-V6
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65002-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON-V6
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65002-ORIGIN-V6
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65002-PREFIX-V6
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+  - name: AS65002-EXPORT-V6
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65002
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65002
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65002
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65002
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+  - name: AS65003-IMPORT-V6
+    statements:
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:1[0-9]{3}:[0-9]*$
+    - conditions:
+        bgp-conditions:
+          as-path-length:
+            operator: ge
+            value: 5
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:5
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65003-PEER
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:7
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: BOGON-V6
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:3
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-as-path-set:
+            as-path-set: AS65003-ORIGIN-V6
+            match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:10
+        route-disposition: reject-route
+    - conditions:
+        match-prefix-set:
+          prefix-set: AS65003-PREFIX-V6
+          match-set-options: invert
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:9
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1001:1
+    - conditions:
+        bgp-conditions:
+          rpki-validation-result: invalid
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: add
+            set-large-community-method:
+              communities-list:
+                - 64686:1101:13
+        route-disposition: reject-route
+  - name: AS65003-EXPORT-V6
+    statements:
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-AS65003
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-AS65003
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: EXPORT-TO-AS65003
+      actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: EXPORT-TO-AS65003
+      actions:
+        bgp-actions:
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+        route-disposition: accept-route
+    - conditions:
+        bgp-conditions:
+          match-community-set:
+            community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - conditions:
+        bgp-conditions:
+          match-large-community-set:
+            large-community-set: NOT-EXPORT-TO-ALL
+      actions:
+        route-disposition: reject-route
+    - actions:
+        bgp-actions:
+          set-community:
+            options: remove
+            set-community-method:
+              communities-list:
+                - ^(0|64686):[0-9]+$
+          set-large-community:
+            options: remove
+            set-large-community-method:
+              communities-list:
+                - ^64686:[0-9]{1}:[0-9]*$
+                - ^64686:[0-9]{3}:[0-9]*$
+
+defined-sets:
+  prefix-sets:
+### prefix list for AS65001 setting: from
+    - prefix-set-name: AS65001-PREFIX
+      prefix-list:
+        - ip-prefix: 10.1.0.0/16
+### prefix list for AS65001 setting: to
+    - prefix-set-name: AS65002-PREFIX
+      prefix-list:
+        - ip-prefix: 10.2.0.0/16
+        - ip-prefix: 10.2.1.0/24
+        - ip-prefix: 10.2.2.0/24
+        - ip-prefix: 10.23.0.0/16
+    - prefix-set-name: AS65003-PREFIX
+      prefix-list:
+        - ip-prefix: 10.3.0.0/16
+        - ip-prefix: 10.23.0.0/16
+    - prefix-set-name: BOGON
+      prefix-list:
+        - ip-prefix: 0.0.0.0/8
+          masklength-range: 8..32
+        ## commendout for demo
+        #- ip-prefix: 10.0.0.0/8
+        #  masklength-range: 8..32
+        - ip-prefix: 127.0.0.0/8
+          masklength-range: 8..32
+        - ip-prefix: 169.254.0.0/16
+          masklength-range: 16..32
+        - ip-prefix: 172.16.0.0/12
+          masklength-range: 12..32
+        - ip-prefix: 192.0.0.0/24
+          masklength-range: 24..32
+        - ip-prefix: 192.0.2.0/24
+          masklength-range: 24..32
+        - ip-prefix: 192.168.0.0/16
+          masklength-range: 16..32
+        - ip-prefix: 198.18.0.0/15
+          masklength-range: 15..32
+        - ip-prefix: 198.51.100.0/24
+          masklength-range: 24..32
+        - ip-prefix: 203.0.113.0/24
+          masklength-range: 24..32
+        - ip-prefix: 224.0.0.0/3
+          masklength-range: 3..32
+        - ip-prefix: 240.0.0.0/4
+          masklength-range: 4..32
+        - ip-prefix: 255.255.255.255/32
+          masklength-range: 32..32
+    - prefix-set-name: AS65001-PREFIX-V6
+      prefix-list:
+        - ip-prefix: 2001:db8:1::/64
+    - prefix-set-name: AS65002-PREFIX-V6
+      prefix-list:
+        - ip-prefix: 2001:db8:2::/64
+        - ip-prefix: 2001:db8:2:1::/64
+        - ip-prefix: 2001:db8:2:2::/64
+        - ip-prefix: 2001:db8:23::/64
+    - prefix-set-name: AS65003-PREFIX-V6
+      prefix-list:
+        - ip-prefix: 2001:db8:3::/64
+        - ip-prefix: 2001:db8:23::/64
+    - prefix-set-name: BOGON-V6
+      prefix-list:
+        - ip-prefix: ::/128
+          masklength-range: 128..128
+        - ip-prefix: fe80::/10
+          masklength-range: 10..128
+        - ip-prefix: fc00::/7
+          masklength-range: 7..128
+        - ip-prefix: 5f00::/8
+          masklength-range: 8..128
+        - ip-prefix: 3ffe::/16
+          masklength-range: 16..128
+        - ip-prefix: 2001:10::/28
+          masklength-range: 28..128
+        - ip-prefix: ::/0
+          masklength-range: 0..0
+        - ip-prefix: ff00::/8
+          masklength-range: 8..128
+        ## commendout for demo
+        #- ip-prefix: 2001:db8::/32
+        #  masklength-range: 32..128
+  bgp-defined-sets:
+    as-path-sets:
+### as path list for AS65001 setting: from
+      - as-path-set-name: AS65001-PEER
+        as-path-list:
+          - ^65001_
+      - as-path-set-name: AS65001-ORIGIN
+        as-path-list:
+          - _65001$
+### as path list for AS65001 setting: to
+      - as-path-set-name: AS65001-ORIGIN-V6
+        as-path-list:
+          - _65001$
+      - as-path-set-name: AS65002-PEER
+        as-path-list:
+          - ^65002_
+      - as-path-set-name: AS65002-ORIGIN
+        as-path-list:
+          - _65002$
+      - as-path-set-name: AS65002-ORIGIN-V6
+        as-path-list:
+          - _65002$
+      - as-path-set-name: AS65003-PEER
+        as-path-list:
+          - ^65003_
+      - as-path-set-name: AS65003-ORIGIN
+        as-path-list:
+          - _65003$
+      - as-path-set-name: AS65003-ORIGIN-V6
+        as-path-list:
+          - _65003$
+    community-sets:
+### community list for AS65001 setting: from
+      - community-set-name: NOT-EXPORT-TO-AS65001
+        community-list:
+          - 0:65001
+      - community-set-name: EXPORT-TO-AS65001
+        community-list:
+          - 64686:65001
+### community list for AS65001 setting: to
+      - community-set-name: NOT-EXPORT-TO-AS65002
+        community-list:
+          - 0:65002
+      - community-set-name: EXPORT-TO-AS65002
+        community-list:
+          - 64686:65002
+      - community-set-name: NOT-EXPORT-TO-AS65003
+        community-list:
+          - 0:65003
+      - community-set-name: EXPORT-TO-AS65003
+        community-list:
+          - 64686:65003
+      - community-set-name: NOT-EXPORT-TO-ALL
+        community-list:
+          - 0:64686
+    large-community-sets:
+### large community list for AS65001 setting: from
+      - large-community-set-name: NOT-EXPORT-TO-AS65001
+        large-community-list:
+          - 64686:0:65001
+      - large-community-set-name: EXPORT-TO-AS65001
+        large-community-list:
+          - 64686:1:65001
+### large community list for AS65001 setting: to
+      - large-community-set-name: NOT-EXPORT-TO-AS65002
+        large-community-list:
+          - 64686:0:65002
+      - large-community-set-name: EXPORT-TO-AS65002
+        large-community-list:
+          - 64686:1:65002
+      - large-community-set-name: NOT-EXPORT-TO-AS65003
+        large-community-list:
+          - 64686:0:65003
+      - large-community-set-name: EXPORT-TO-AS65003
+        large-community-list:
+          - 64686:1:65003
+      - large-community-set-name: NOT-EXPORT-TO-ALL
+        large-community-list:
+          - 64686:0:0

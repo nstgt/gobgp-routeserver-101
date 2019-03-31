@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
   # rs gobgp
   config.vm.define :rs do |rs|
     rs.vm.box = "bento/debian-9.6"
-    rs.vm.network "private_network", ip: "10.173.176.211", virtualbox__intnet: "#{UUID}_ixp_subnet"
+    rs.vm.network "private_network", virtualbox__intnet: "#{UUID}_ixp_subnet", auto_config: false
     rs.vm.provider "virtualbox" do |v|
       v.cpus = 2
       v.memory = 512
@@ -13,6 +13,14 @@ Vagrant.configure(2) do |config|
     rs.vm.provision "shell", privileged: true, inline: <<-EOS
       grep 127.0.1.2 /etc/hosts || echo 127.0.1.2 rs >> /etc/hosts
       hostnamectl set-hostname rs
+      echo "auto eth1"                   > /etc/network/interfaces.d/eth1
+      echo "iface eth1 inet static"     >> /etc/network/interfaces.d/eth1
+      echo " address 10.173.176.211"    >> /etc/network/interfaces.d/eth1
+      echo " netmask 255.255.255.0"     >> /etc/network/interfaces.d/eth1
+      echo "iface eth1 inet6 static"    >> /etc/network/interfaces.d/eth1
+      echo " address 2001:db8:7:1::211" >> /etc/network/interfaces.d/eth1
+      echo " netmask 64"                >> /etc/network/interfaces.d/eth1
+      ifup eth1
       systemctl restart rsyslog
       apt-get update && apt-get install -y vim git
     EOS

@@ -3708,6 +3708,13 @@
 +              route 10.23.0.0/16 discard;
 +          }
 +      }
++      rib inet6.0 {
++          static {
++              /* my-prefixes */
++              route 2001:db8:2::/64 discard;
++              route 2001:db8:23::/64 discard;
++          }
++      }
 +      router-id 10.2.0.102;
 +      autonomous-system 65002;
 +  }
@@ -3717,6 +3724,11 @@
 +           neighbor 10.173.176.211 {
 +               authentication-key "$9$1BqISevMX-b28XHqmfzFEcSyvWX7-"; ## SECRET-DATA
 +               export advertise-my-prefixes;
++               peer-as 64686;
++           }
++           neighbor 2001:db8:7:1::211 {
++               authentication-key "$9$N6-s4aJDkmTGDp0BIcSVwsYaZDik"; ## SECRET-DATA
++               export advertise-my-prefixes-v6;
 +               peer-as 64686;
 +           }
 +       }
@@ -3732,6 +3744,12 @@
 +      prefix-list my-prefixes-except-for-as65001 {
 +          10.23.0.0/16;
 +      }
++      prefix-list my-prefixes-v6 {
++          2001:db8:2::/64;
++      }
++      prefix-list my-prefixes-except-for-as65001-v6 {
++          2001:db8:23::/64;
++      }
 +      policy-statement advertise-my-prefixes {
 +          term 1 {
 +              from {
@@ -3744,6 +3762,28 @@
 +              from {
 +                  protocol static;
 +                  prefix-list-filter my-prefixes-except-for-as65001 exact;
++              }
++              then {
++                  community + not-advertise-to-as65001;
++                  accept;
++              }
++          }
++          term 99 {
++              then reject;
++          }
++      }
++      policy-statement advertise-my-prefixes-v6 {
++          term 1 {
++              from {
++                  protocol static;
++                  prefix-list-filter my-prefixes-v6 exact;
++              }
++              then accept;
++          }
++          term 2 {
++              from {
++                  protocol static;
++                  prefix-list-filter my-prefixes-except-for-as65001-v6 exact;
 +              }
 +              then {
 +                  community + not-advertise-to-as65001;
