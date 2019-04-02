@@ -2,7 +2,7 @@
 
 This repository provides Vagrantfile to build the tutorial environment which is described in the following slide:
 
-[TBF]()
+[GoBGP 101: How to start](https://speakerdeck.com/nstgt/gobgp-101-how-to-start)
 
 This was presented at 34th Euro-IX Forum (Toulouse, France / Apr 2019)
 
@@ -13,6 +13,7 @@ This was presented at 34th Euro-IX Forum (Toulouse, France / Apr 2019)
 - It covers following topics:
     - Installation of GoBGP
     - gobgpd administration via systemd
+    - Logging
     - Writing configuration file
     - Adding eBGP peers
     - Applying policy
@@ -46,4 +47,4 @@ You will configure GoBGP installed on **rs** so login to rs by `vagrant ssh rs` 
 
 After that you can modify it following the step by step instruction in the slide, or try out whatever you want to.
 
-You can find the final configuration for **rs** under `configs/rs/gobgpd.yaml.complete`
+You can find the final configuration for **rs** as `configs/rs/gobgpd.yaml.complete`
