@@ -2,7 +2,7 @@
 
 This repository provides Vagrantfile to build the tutorial environment which is described in the following slide:
 
-[GoBGP 101: How to start](https://speakerdeck.com/nstgt/gobgp-101-how-to-start)
+[GoBGP Route Server 101](https://speakerdeck.com/nstgt/gobgp-route-server-101)
 
 This was presented at 34th Euro-IX Forum (Toulouse, France / Apr 2019)
 

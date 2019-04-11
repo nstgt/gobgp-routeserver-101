@@ -6,6 +6,7 @@ cat << EOF > /etc/profile.d/golang.sh
 export GOROOT=/usr/local/go
 export GOPATH=/usr/local/opt/gopath
 export PATH=\$GOROOT/bin:\$PATH
+export GO111MODULE=on
 EOF
 
 source /etc/profile.d/golang.sh
@@ -18,11 +19,16 @@ wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz > 
 tar zxf go${GO_VERSION}.linux-amd64.tar.gz
 
 # install gobgp and gobgpd
-go get github.com/osrg/gobgp/...
+# '/root' is replacable anywhere you prefer
+export ROOT=/root
+cd $ROOT
+git clone git://github.com/osrg/gobgp
+cd $ROOT/gobgp && go mod download
+cd $ROOT/gobgp/cmd && go install ./...
 cp $GOPATH/bin/* /usr/local/sbin
 
 # install bash completions for gobgp command
-cp $GOPATH/src/github.com/osrg/gobgp/tools/completion/*.bash /etc/bash_completion.d/
+cp $ROOT/gobgp/tools/completion/*.bash /etc/bash_completion.d/
 
 # install libcap2-bin (for setcap used in systemd unit file)
 apt-get install -y libcap2-bin

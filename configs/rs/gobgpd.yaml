@@ -31,6 +31,7 @@ neighbors:
     route-server:
       config:
         route-server-client: true
+        secondary-route: true
     afi-safis:
       - config:
           afi-safi-name: ipv4-unicast
@@ -60,6 +61,7 @@ neighbors:
     route-server:
       config:
         route-server-client: true
+        secondary-route: true
     afi-safis:
       - config:
           afi-safi-name: ipv4-unicast
